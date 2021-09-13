@@ -1,0 +1,126 @@
+html
+{
+    background-color: rgb(27, 28, 31);
+    padding-bottom: 70px;
+}
+
+#search
+{
+    background-color:rgb(43, 43, 44);
+    color: rgb(230, 230, 230);
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border: none;
+    border-radius: 10px;
+    height: 30px;
+    width: 500px;
+    align-self: center;
+    padding: 20px;
+    font-size: 18px;
+    margin: 35px 10px 35px 10px;
+    text-align: center;
+}
+
+#search:hover
+{
+    background-color: rgb(51, 51, 51);
+}
+
+#search:focus
+{
+    margin: 34px 9px 34px 9px;
+    background-color:rgb(43, 43, 44);
+    border: 1px solid rgb(87, 86, 86);
+    outline: none;
+}
+
+#search::placeholder{
+    color:rgb(196, 196, 196);
+}
+
+.centre
+{
+    display: flex;
+    justify-content: center;
+}
+
+#playlists
+{
+    width: 935px;
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+}
+
+.playlist-link
+{
+    text-decoration: none;
+}
+
+.playlist-box
+{
+    display: inline-block;
+    margin: 5px 5px 5px 5px;
+    border-radius: 10px;
+    min-height: 175px;
+    width: 175px;  
+    overflow: hidden;  
+    box-shadow: 2px 1px 7px rgb(24, 24, 24);
+    border:rgb(32, 32, 32) solid 1px;
+}
+
+.playlist-box :hover
+{
+    filter: brightness(1.4);
+}
+
+.playlist-img
+{   
+    margin-top: -14px;
+    background-color: rgb(87, 86, 86);
+    min-height: 175px;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.playlist-name
+{
+    font-family: 'ZCOOL KuaiLe', 'Trebuchet MS';
+    font-size: 14px;
+    padding: 20px 15px 15px 15px;
+    color: rgb(197, 197, 197);
+    display: flex;
+    user-select: none;
+}
+
+#tag-info
+{
+    margin: -5px 10px 0px 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    width: 500px;
+    padding: 10px 10px 20px 30px;
+    background-color: rgb(46, 46, 46);
+}
+
+#tag-info > h3
+{
+    color: rgb(222, 203, 183);
+    font-family: 'ZCOOL KuaiLe', 'Trebuchet MS';
+    font-size: 16px;
+    margin-bottom: -5px;
+}
+
+#tag-info > ul 
+{
+    font-family: 'ZCOOL KuaiLe', Trebuchet MS;
+    line-height: 20px;
+    color:rgb(163, 163, 163);
+}
+
+#tag-info > ul > li:hover
+{
+    color: rgb(240, 240, 240);
+    font-weight: bold;
+    cursor: pointer;
+}
