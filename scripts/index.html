@@ -12,21 +12,45 @@
     <title>Music</title>
 </head>
 <body>
-    <div class="centre">
-        <input id="search" type="text" placeholder="Scripts are off">
+
+    <input id="search" type="text" placeholder="Scripts are off">
+
+    <div id="intro" style="display: none;">
+        <p>Welcome back to the intro &lt;div&gt;.. stay strong keep grinding!</p>
     </div>
-    <div class="centre">
-        <div id="tag-info" style="display: none;">
-            <h3>Categories:</h3>
-            <ul>
-                <li>No categories yet. If you make any, they'll appear here!</li>
-            </ul>
+
+    <div id="playlists">
+        <div class="playlist-tile">
+            <a href="#" class="playlist-url"></a>
+            <img src="../img/0.png" class="playlist-img">
+            <p class="playlist-name">ZERO</p>
         </div>
     </div>
-    <div class="centre">
-        <div id="playlists"></div>
+
+    <div id="add-playlist" style="display: none;">
+
+        <form id="add-form" autocomplete="off">
+            <p>Name</p>
+            <input type="text" name="name">
+            <p>URL</p>
+            <input type="text" name="url">
+            <p>Image</p>
+            <input type="text" name="img">
+            <p>Categories</p>
+            <input type="text" name="categories">
+        </form>
+
+        <input id="add-submit" type="submit" value="Create">
     </div>
-    <script type="text/javascript" src="../playlists.js"></script>
+
+    <div id="categories" style="display: none;">
+        <p>No categories yet. Once you create some, they'll appear here!</p>
+        <ul></ul>
+    </div>
+    
+    <div id="help"></div>
+
     <script type="text/javascript" src="scripts.js"></script>
+    
 </body>
 </html>
