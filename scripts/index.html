@@ -21,9 +21,22 @@
 
     <div id="playlists">
         <div class="playlist-tile">
-            <a href="#" class="playlist-url"></a>
-            <img src="../img/0.png" class="playlist-img">
-            <p class="playlist-name">ZERO</p>
+            <a href="#"></a>
+            <img src="../img/3.png">
+            <p>Sample text</p>
+            <div>
+                <button class="edit-button">Edit</button>
+                <button class="delete-button">Delete</button>
+            </div>
+        </div>
+        <div class="playlist-tile">
+            <a href="#"></a>
+            <img src="../img/2.png">
+            <p>More sample text</p>
+            <div>
+                <button class="edit-button">Edit</button>
+                <button class="delete-button">Delete</button>
+            </div>
         </div>
     </div>
 
@@ -43,13 +56,42 @@
         <input id="add-submit" type="submit" value="Create">
     </div>
 
+    <div id="edit-playlist" style="display: none;">
+        <h1>Playlist Information</h1>
+        <div id="edit-popup">
+            <form id="edit-form" autocomplete="off">
+                <p>Name</p>
+                <input type="text" name="edited-name">
+                <p>URL</p>
+                <input type="text" name="edited-url">
+                <p>Image</p>
+                <input type="text" name="edited-img">
+                <p>Categories</p>
+                <input type="text" name="edited-categories">
+            </form>
+            <img id="edit-img">
+        </div>
+        
+        <span>
+            <input id="edit-cancel" type="button" value="Cancel">
+            <input id="edit-submit" type="button" value="Save changes">
+        </span>
+    </div>
+
     <div id="categories" style="display: none;">
         <p>No categories yet. Once you create some, they'll appear here!</p>
         <ul></ul>
     </div>
     
-    <div id="help"></div>
+    <div id="help" style="display: none;">
+        <ul>
+            <li>+ Add playlist</li>
+            <li>- Edit playlists</li>
+            <li>&lt; Browse categories</li>
+        </ul>
+    </div>
 
+    <div id="background-dim" style="display: none;"></div>
     <script type="text/javascript" src="scripts.js"></script>
     
 </body>

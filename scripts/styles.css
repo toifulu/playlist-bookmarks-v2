@@ -1,4 +1,4 @@
-/* General */
+/* ================ General ================ */
 
 * {
     font-family: 'ZCOOL KuaiLe', 'Trebuchet MS';
@@ -24,7 +24,18 @@ h1 {
     margin-bottom: -5px;
 }
 
-/* Search bar */
+#background-dim {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* ================ Search bar ================ */
 
 #search {
     background-color:rgb(43, 43, 44);
@@ -65,7 +76,7 @@ h1 {
     color:rgb(196, 196, 196);
 }
 
-/* Playlist tiles */
+/* ================ Playlist tiles ================ */
 
 #playlists {
     width: 80vw;
@@ -82,13 +93,16 @@ h1 {
     padding: 12px;
     border-radius: 2px 22px 2px 22px;
 
-    background-color: rgb(33, 33, 34);
-    border:1px solid rgb(53, 52, 52);
+    background-color: rgb(41, 41, 44);
+    border:1px solid rgb(57, 57, 59);
     text-decoration: none;
 }
 
+.playlist-tile:hover {
+    background-color: rgb(57, 57, 59);
+}
 
-.playlist-name {
+.playlist-tile > p {
     padding: 10px 7px 5px 7px;
     margin: 10px 7px 5px 7px;
 
@@ -97,7 +111,7 @@ h1 {
     max-width: 135px;
 }
 
-.playlist-url {
+.playlist-tile > a {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -107,27 +121,195 @@ h1 {
     z-index: 1;
 }
 
-.playlist-img {   
+.playlist-tile > img {   
     background-color: rgb(87, 86, 86);
     background-repeat: no-repeat;
     background-size: cover;
 
-    border-radius: 2px 22px 2px 22px;
+    border-radius: 2px 22px 2px 2px;
     width: 175px;
     height: 175px;
 }
 
-.playlist-tile:hover {
-    background-color: rgb(43, 43, 43);
-    padding: 11.5px;
-    border:1.5px solid rgb(78, 79, 80);
+/* ================ Editing playlist ================ */
+
+.playlist-tile > div {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 8px;
+    justify-content: center;
+    z-index: 2;
+    
+    position: absolute;
+    top: 30%;
+    left: 0px;
+    width: 100%;
+    visibility: hidden;
 }
 
-/* Add playlist */
+.editing {
+    background-color: rgb(48, 48, 49);
+    border: 1px solid rgb(65, 72, 78);
+}
+
+.editing:hover {
+    background-color: rgb(38, 38, 39);
+    padding: 11px;
+    border: 2px solid rgb(65, 72, 78);
+}
+
+.editing:hover > div {
+    visibility: visible;
+}
+
+.editing:hover > img {
+    visibility: hidden;
+}
+
+.editing:hover > a {
+    visibility: hidden;
+}
+
+.editing:hover > p {
+    visibility: hidden;
+}
+
+.playlist-tile > div > button {
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 14px;
+
+    color: rgb(97, 96, 96);
+    background-color: rgb(201, 199, 195);
+}
+
+.edit-button:hover {
+    color:rgb(219, 216, 216);
+    background-color: rgb(42, 112, 170);
+}
+
+.delete-button:hover {
+    color:rgb(219, 216, 216);
+    background-color: rgb(151, 78, 84);
+}
+
+#edit-playlist {
+    background-color: rgb(35, 35, 36);
+    width: 650px;
+    height: 350px;
+
+    position: fixed;
+    padding: 20px;
+    z-index: 10;
+    border: 2px solid rgb(87, 88, 90);
+    border-radius: 2px;
+    margin-top: 22vh;
+    
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#edit-popup {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    padding: 5px 10px 5px 10px;
+    grid-gap: 20px;
+}
+
+#edit-img {
+    height: 185px;
+    width: 185px;
+    background-color: grey;
+
+    align-self: center;
+    border-radius: 5px;
+}
+
+#edit-form {
+    padding: 20px 20px 20px 0px;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 95px 1fr;
+}
+
+#edit-form > input {
+    border-style: none;
+    border-radius: 9px;
+    padding: 5px 10px 5px 5px;
+
+    height: 20px;
+    align-self: center;
+
+    background-color: rgb(173, 173, 173);
+    color:rgb(43, 43, 44);
+}
+
+#edit-form > input:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+#edit-form > input:focus {
+    outline: none;
+    padding: 3px 8px 3px -2px;
+    border: 2px solid rgb(63, 122, 177);
+    border-radius: 11px;
+    background-color: rgb(230, 230, 230);
+}
+
+#edit-playlist > span > input {
+    background-color: rgb(43, 43, 44);
+    border-radius: 15px;
+    border-style: none;
+    
+    flex-direction: row;
+    align-self: center;
+    justify-content: center;
+    margin: 0px 5px 0px 5px;
+    width: 160px;
+    padding: 10px;
+}
+
+#edit-submit:focus {
+    outline: none;
+    color:rgb(241, 229, 235);
+    background-color: rgb(42, 112, 170);
+}
+
+#edit-submit:hover {
+    color:rgb(241, 229, 235);
+    background-color: rgb(42, 112, 170);
+}
+
+#edit-submit:active {
+    background-color: rgb(63, 122, 177);
+    font-weight: bold;
+}
+
+#edit-cancel:focus {
+    outline: none;
+    color:rgb(241, 229, 235);
+    background-color: rgb(96, 97, 99);
+}
+
+#edit-cancel:hover {
+    color:rgb(241, 229, 235);
+    background-color: rgb(96, 97, 99);
+}
+
+#edit-cancel:active {
+    background-color: rgb(111, 113, 116);
+    font-weight: bold;
+}
+
+/* ================ Add playlist ================ */
 
 #add-playlist {
     min-width: 155px;
     width: 47vw;
+    max-width: 450px;
 
     display: flex;
     flex-direction: column;
@@ -194,13 +376,15 @@ h1 {
         font-weight: bold;
 }
 
-/* Search categories */
+/* ================ Search categories ================ */
 
 #categories {
     margin: -5px 10px 0px 10px;
     border-radius: 10px;
-    width: 52vw;
     padding: 10px 30px 20px 30px;
+
+    width: 52vw;
+    max-width: 450px;
     background-color: rgb(43, 43, 44);
 }
 
