@@ -1,4 +1,4 @@
-/* ================ General ================ */
+/* ================ General ================================================================================================ */
 
 * {
     font-family: 'ZCOOL KuaiLe', 'Trebuchet MS';
@@ -35,7 +35,7 @@ h1 {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-/* ================ Search bar ================ */
+/* ================ Search bar ================================================================================================ */
 
 #search {
     background-color:rgb(43, 43, 44);
@@ -76,7 +76,7 @@ h1 {
     color:rgb(196, 196, 196);
 }
 
-/* ================ Playlist tiles ================ */
+/* ================ Playlist tiles ================================================================================================ */
 
 #playlists {
     width: 80vw;
@@ -131,7 +131,7 @@ h1 {
     height: 175px;
 }
 
-/* ================ Editing playlist ================ */
+/* ================ Editing playlist ================================================================================================ */
 
 .playlist-tile > div {
     display: grid;
@@ -158,21 +158,10 @@ h1 {
     border: 2px solid rgb(65, 72, 78);
 }
 
-.editing:hover > div {
-    visibility: visible;
-}
-
-.editing:hover > img {
-    visibility: hidden;
-}
-
-.editing:hover > a {
-    visibility: hidden;
-}
-
-.editing:hover > p {
-    visibility: hidden;
-}
+.editing:hover > div { visibility: visible; }
+.editing:hover > img { visibility: hidden; }
+.editing:hover > a { visibility: hidden; }
+.editing:hover > p { visibility: hidden; }
 
 .playlist-tile > div > button {
     width: 100px;
@@ -304,7 +293,7 @@ h1 {
     font-weight: bold;
 }
 
-/* ================ Add playlist ================ */
+/* ================ Add playlist ================================================================================================ */
 
 #add-playlist {
     min-width: 155px;

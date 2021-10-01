@@ -23,7 +23,7 @@ class Playlist {
 let lib = [];
 let categoriesLib = [];
 
-// ======================== Show and hide ========================
+// ======================== Show and hide ========================================================================================================================
 
 // DOM references
 let searchId = document.getElementById("search");
@@ -35,7 +35,6 @@ let editId = document.getElementById("edit-playlist");
 let helpId = document.getElementById("help");
 let backgroundDim = document.getElementById("background-dim");
 
-// So I can write slightly less
 function show(id) { id.removeAttribute("style"); }
 function hide(id) { id.setAttribute("style", "display: none;"); }
 
@@ -127,7 +126,7 @@ function resetSearch(e) {
 searchId.addEventListener("keyup", showSearch);
 searchId.addEventListener("keydown", function (e) { resetSearch(e) });
 
-// ======================== Add playlist ========================
+// ======================== Add playlist ================================================================================================
 
 // DOM references
 let addSumbitId = document.getElementById("add-submit");
@@ -193,7 +192,8 @@ function add() {
 // Adding the event listeners
 addSumbitId.addEventListener("click", add);
 
-// ======================== Edit playlists ========================
+// ======================== Edit playlists ================================================================================================
+
 let editSaveId = document.getElementById("edit-submit");
 let editCancelId = document.getElementById("edit-cancel");
 let editDisplayImgId = document.getElementById("edit-img");
@@ -246,7 +246,7 @@ editSaveId.addEventListener("click", function (e) { hideEditModuleSubmit(e); });
 editCancelId.addEventListener("click", hideEditModuleCancel);
 backgroundDim.addEventListener("click", hideEditModuleCancel);
 
-// ======================== Final bits ========================
+// ======================== Final bits ================================================================================================
 
 if (!playlistId.hasChildNodes) {
     show(introId);
