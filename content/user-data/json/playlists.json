@@ -1,1 +1,14 @@
-[]
+[
+    {
+        "name": "Synth", 
+        "img": "1.png", 
+        "url": "https://www.youtube.com/playlist?list=PLIggG_1k5RFuBZ781wgy_Ue8kTfxGhY5q", 
+        "categories": ["instrumental", "relax"]
+    }, 
+    {
+        "name": "Lofi",
+        "img": "2.png",
+        "url": "https://www.youtube.com/playlist?list=PLIggG_1k5RFtx8H66zvlyVVNBOed_92KC",
+        "categories": ["instrumental", "relax"]
+    }
+]
