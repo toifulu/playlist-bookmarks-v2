@@ -20,11 +20,11 @@ let editId = document.getElementById("edit-playlist");
 let helpId = document.getElementById("help");
 let backgroundDim = document.getElementById("background-dim");
 
-function show(id) { id.removeAttribute("style"); }
-function hide(id) { id.setAttribute("style", "display: none;"); }
+function show(id: HTMLElement): void { id.removeAttribute("style"); }
+function hide(id: HTMLElement): void { id.setAttribute("style", "display: none;"); }
 
 // Shows and hides each <div> section based on search bar
-function showSearch() {
+function showSearch(): void {
     let searchValue = searchId.value;
     let searchTxt = searchValue.toLowerCase().trim();
 
@@ -55,7 +55,6 @@ function showSearch() {
             show(categoryId);
             searchValue = "Categories";
             break;
-
         case "-":
             show(playlistId);
             editOn();
@@ -66,7 +65,6 @@ function showSearch() {
             editOn();
             searchValue = "Edit playlists";
             break;
-
         case "?":
             show(helpId);
             searchValue = "Commands list";
@@ -75,7 +73,6 @@ function showSearch() {
             show(helpId);
             searchValue = "Commands list";
             break;
-
         default:
             show(playlistId);
             editOff();
@@ -84,10 +81,10 @@ function showSearch() {
 }
 
 // Deletes search query upon backspace
-function resetSearch(e) {
-    let searchValue = (<HTMLInputElement>searchId).value;
+function resetSearch(e: KeyboardEvent): void {
+    let searchValue = searchId.value;
     let searchTxt = searchValue.toLowerCase().trim();
-    let backspace = (e.keyCode == 8);
+    let backspace = (e.key == "Backspace");
 
     switch (searchTxt) {
         case "add playlist":
@@ -120,7 +117,7 @@ let addUrlId = <HTMLInputElement>document.getElementsByName("url")[0];
 let addImgId = <HTMLInputElement>document.getElementsByName("img")[0];
 let addCategoriesId = <HTMLInputElement>document.getElementsByName("categories")[0];
 
-function add() {
+function add(): void {
     // Fetching values from input form
     let name = addNameId.value;
     let url = addUrlId.value;
@@ -185,23 +182,24 @@ let editCategories = <HTMLInputElement>document.getElementsByName("edited-catego
 let editedIds = [editedName, editedUrl, editedImg, editCategories];
 
 // Adjusts the class (mostly CSS appearance) when editing mode is on
-function editOn() {
+function editOn(): void {
     let tiles = document.querySelectorAll(".playlist-tile");
     tiles.forEach(tile => tile.classList.add("editing"));
 }
 
 // Return class to normal
-function editOff() {
+function editOff(): void {
     let tiles = document.querySelectorAll(".playlist-tile");
     tiles.forEach(tile => tile.classList.remove("editing"));
 }
 
 // Shows edit module
-function showEditModule(e) {
+function showEditModule(e: Event): void {
     show(editId);
     show(backgroundDim);
 
-    let playlistInfo = e.target.parentNode.parentNode;
+    let target = <HTMLElement>e.target;
+    let playlistInfo: any = target.parentNode.parentNode;
 
     editedName.value = playlistInfo.getElementsByTagName("p")[0].textContent;
     editedUrl.value = playlistInfo.getElementsByTagName("a")[0].getAttribute("href");
@@ -209,12 +207,12 @@ function showEditModule(e) {
     editDisplayImg.setAttribute("src", editedImg.value);
 }
 
-function hideEditModuleSubmit(e) {
+function hideEditModuleSubmit(e: Event): void {
     hide(editId);
     hide(backgroundDim);
 }
 
-function hideEditModuleCancel() {
+function hideEditModuleCancel(): void {
     hide(editId);
     hide(backgroundDim);
 

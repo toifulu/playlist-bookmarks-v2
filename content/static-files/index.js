@@ -69,7 +69,7 @@ function showSearch() {
 function resetSearch(e) {
     let searchValue = searchId.value;
     let searchTxt = searchValue.toLowerCase().trim();
-    let backspace = (e.keyCode == 8);
+    let backspace = (e.key == "Backspace");
     switch (searchTxt) {
         case "add playlist":
             searchValue = backspace ? "" : "Add playlist";
@@ -162,7 +162,8 @@ function editOff() {
 function showEditModule(e) {
     show(editId);
     show(backgroundDim);
-    let playlistInfo = e.target.parentNode.parentNode;
+    let target = e.target;
+    let playlistInfo = target.parentNode.parentNode;
     editedName.value = playlistInfo.getElementsByTagName("p")[0].textContent;
     editedUrl.value = playlistInfo.getElementsByTagName("a")[0].getAttribute("href");
     editedImg.value = playlistInfo.getElementsByTagName("img")[0].getAttribute("src");
