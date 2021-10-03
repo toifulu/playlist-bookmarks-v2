@@ -1,9 +1,3 @@
-
-/* todo
-- seems like you can't use node on browser
-- either that or do something with local server
-- filesystem not workingajskdfsadhfjkhjsk
- */
 interface Playlist {
     name: string,
     img: string,
@@ -11,12 +5,39 @@ interface Playlist {
     categories: Array<string>
 }
 
-let lib: Array<Playlist>;
-let categories: Array<string>;
+let lib: Array<Playlist> = [];
+let categories: Array<string> = [];
 
 // ======================== Upon loading ================================================================================================
 
+// init localstorage
+if (window.localStorage.length == 0) {
+    localStorage.setItem("lib", "");
+    localStorage.setItem("categories", "");
+}
+
 function loadPage(): void {
+    // load up everything
+    if (localStorage.getItem("lib") !== "") {
+        try {
+            lib = JSON.parse(localStorage.getItem("lib"));
+        } catch (err) {
+            console.log(err);
+        }
+
+        lib.forEach((tile) => {
+            let newTile = createTile(tile.name, tile.url, tile.img);
+            playlistId.appendChild(newTile);
+        });
+
+    }
+    if (localStorage.getItem("categories") !== "") {
+        try {
+            categories = JSON.parse(localStorage.getItem("categories"));
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
 }
 
@@ -39,8 +60,7 @@ function hide(id: HTMLElement): void { id.setAttribute("style", "display: none;"
 
 // Shows and hides each <div> section based on search bar
 function showSearch(): void {
-    let searchValue = searchId.value;
-    let searchTxt = searchValue.toLowerCase().trim();
+    let searchTxt = searchId.value.toLowerCase().trim();
 
     // Hide everything beforehand
     hide(playlistId);
@@ -54,38 +74,39 @@ function showSearch(): void {
     switch (searchTxt) {
         case "+":
             show(addId);
-            searchValue = "Add playlist";
+            searchId.value = "Add playlist";
+            console.log("UH");
             break;
         case "add playlist":
             show(addId);
-            searchValue = "Add playlist";
+            searchId.value = "Add playlist";
             break;
 
         case ">":
             show(categoryId);
-            searchValue = "Categories";
+            searchId.value = "Categories";
             break;
         case "categories":
             show(categoryId);
-            searchValue = "Categories";
+            searchId.value = "Categories";
             break;
         case "-":
             show(playlistId);
             editOn();
-            searchValue = "Edit playlists";
+            searchId.value = "Edit playlists";
             break;
         case "edit playlists":
             show(playlistId);
             editOn();
-            searchValue = "Edit playlists";
+            searchId.value = "Edit playlists";
             break;
         case "?":
             show(helpId);
-            searchValue = "Commands list";
+            searchId.value = "Commands list";
             break;
         case "commands list":
             show(helpId);
-            searchValue = "Commands list";
+            searchId.value = "Commands list";
             break;
         default:
             show(playlistId);
@@ -96,22 +117,21 @@ function showSearch(): void {
 
 // Deletes search query upon backspace
 function resetSearch(e: KeyboardEvent): void {
-    let searchValue = searchId.value;
-    let searchTxt = searchValue.toLowerCase().trim();
+    let searchTxt = searchId.value.toLowerCase().trim();
     let backspace = (e.key == "Backspace");
 
     switch (searchTxt) {
         case "add playlist":
-            searchValue = backspace ? "" : "Add playlist";
+            searchId.value = backspace ? "" : "Add playlist";
             break;
         case "categories":
-            searchValue = backspace ? "" : "Categories";
+            searchId.value = backspace ? "" : "Categories";
             break;
         case "edit playlists":
-            searchValue = backspace ? "" : "Edit playlists";
+            searchId.value = backspace ? "" : "Edit playlists";
             break;
         case "commands list":
-            searchValue = backspace ? "" : "Help";
+            searchId.value = backspace ? "" : "Help";
             break;
         default:
             break;
@@ -138,6 +158,31 @@ function add(): void {
     let categories = addCategoriesId.value.split(",");
 
     // Creating the DOM nodes
+    let newTile = createTile(name, url, img);
+    playlistId.appendChild(newTile);
+
+    // Create object and pop into library
+    let newPlaylist: Playlist = {
+        name: name,
+        img: img,
+        url: url,
+        categories: categories,
+    };
+
+    lib.push(newPlaylist);
+
+    // Return to home page
+    (<HTMLInputElement>searchId).value = "";
+    showSearch();
+
+    // Reset everything
+    addNameId.value = "";
+    addUrlId.value = "";
+    addImgId.value = "";
+    addCategoriesId.value = "";
+}
+
+function createTile(name: string, url: string, img: string): HTMLElement {
     let newTile = document.createElement("div");
     newTile.classList.add("playlist-tile");
     let newName = document.createElement("p");
@@ -165,17 +210,7 @@ function add(): void {
     newTile.appendChild(newName);
     newTile.appendChild(newDiv);
 
-    playlistId.appendChild(newTile);
-
-    // Return to home page
-    (<HTMLInputElement>searchId).value = "";
-    showSearch();
-
-    // Reset everything
-    addNameId.value = "";
-    addUrlId.value = "";
-    addImgId.value = "";
-    addCategoriesId.value = "";
+    return newTile;
 }
 
 // Adding the event listeners
@@ -236,6 +271,20 @@ function hideEditModuleCancel(): void {
 editSave.addEventListener("click", function (e) { hideEditModuleSubmit(e); });
 editCancel.addEventListener("click", hideEditModuleCancel);
 backgroundDim.addEventListener("click", hideEditModuleCancel);
+
+// ======================== Upon leaving ========================================================================================================================
+
+function storeStuff() {
+    // parse libs and categories into json
+    if (lib.length != 0) {
+        window.localStorage.setItem("lib", JSON.stringify(lib));
+    }
+    if (categories.length != 0) {
+        window.localStorage.setItem("categories", JSON.stringify(categories));
+    }
+}
+
+window.onbeforeunload = storeStuff;
 
 // ======================== Final bits ================================================================================================
 

@@ -1,25 +1,50 @@
-var lib;
-var categories;
+let lib = [];
+let categories = [];
 // ======================== Upon loading ================================================================================================
+// init localstorage
+if (window.localStorage.length == 0) {
+    localStorage.setItem("lib", "");
+    localStorage.setItem("categories", "");
+}
 function loadPage() {
+    // load up everything
+    if (localStorage.getItem("lib") !== "") {
+        try {
+            lib = JSON.parse(localStorage.getItem("lib"));
+        }
+        catch (err) {
+            console.log(err);
+        }
+        lib.forEach((tile) => {
+            let newTile = createTile(tile.name, tile.url, tile.img);
+            playlistId.appendChild(newTile);
+        });
+    }
+    if (localStorage.getItem("categories") !== "") {
+        try {
+            categories = JSON.parse(localStorage.getItem("categories"));
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
 }
 document.addEventListener("DOMContentLoaded", loadPage);
 // ======================== Show and hide ========================================================================================================================
 // DOM references
-var searchId = document.getElementById("search");
-var introId = document.getElementById("intro");
-var playlistId = document.getElementById("playlists");
-var categoryId = document.getElementById("categories");
-var addId = document.getElementById("add-playlist");
-var editId = document.getElementById("edit-playlist");
-var helpId = document.getElementById("help");
-var backgroundDim = document.getElementById("background-dim");
+let searchId = document.getElementById("search");
+let introId = document.getElementById("intro");
+let playlistId = document.getElementById("playlists");
+let categoryId = document.getElementById("categories");
+let addId = document.getElementById("add-playlist");
+let editId = document.getElementById("edit-playlist");
+let helpId = document.getElementById("help");
+let backgroundDim = document.getElementById("background-dim");
 function show(id) { id.removeAttribute("style"); }
 function hide(id) { id.setAttribute("style", "display: none;"); }
 // Shows and hides each <div> section based on search bar
 function showSearch() {
-    var searchValue = searchId.value;
-    var searchTxt = searchValue.toLowerCase().trim();
+    let searchTxt = searchId.value.toLowerCase().trim();
     // Hide everything beforehand
     hide(playlistId);
     hide(editId);
@@ -31,37 +56,38 @@ function showSearch() {
     switch (searchTxt) {
         case "+":
             show(addId);
-            searchValue = "Add playlist";
+            searchId.value = "Add playlist";
+            console.log("UH");
             break;
         case "add playlist":
             show(addId);
-            searchValue = "Add playlist";
+            searchId.value = "Add playlist";
             break;
         case ">":
             show(categoryId);
-            searchValue = "Categories";
+            searchId.value = "Categories";
             break;
         case "categories":
             show(categoryId);
-            searchValue = "Categories";
+            searchId.value = "Categories";
             break;
         case "-":
             show(playlistId);
             editOn();
-            searchValue = "Edit playlists";
+            searchId.value = "Edit playlists";
             break;
         case "edit playlists":
             show(playlistId);
             editOn();
-            searchValue = "Edit playlists";
+            searchId.value = "Edit playlists";
             break;
         case "?":
             show(helpId);
-            searchValue = "Commands list";
+            searchId.value = "Commands list";
             break;
         case "commands list":
             show(helpId);
-            searchValue = "Commands list";
+            searchId.value = "Commands list";
             break;
         default:
             show(playlistId);
@@ -71,21 +97,20 @@ function showSearch() {
 }
 // Deletes search query upon backspace
 function resetSearch(e) {
-    var searchValue = searchId.value;
-    var searchTxt = searchValue.toLowerCase().trim();
-    var backspace = (e.key == "Backspace");
+    let searchTxt = searchId.value.toLowerCase().trim();
+    let backspace = (e.key == "Backspace");
     switch (searchTxt) {
         case "add playlist":
-            searchValue = backspace ? "" : "Add playlist";
+            searchId.value = backspace ? "" : "Add playlist";
             break;
         case "categories":
-            searchValue = backspace ? "" : "Categories";
+            searchId.value = backspace ? "" : "Categories";
             break;
         case "edit playlists":
-            searchValue = backspace ? "" : "Edit playlists";
+            searchId.value = backspace ? "" : "Edit playlists";
             break;
         case "commands list":
-            searchValue = backspace ? "" : "Help";
+            searchId.value = backspace ? "" : "Help";
             break;
         default:
             break;
@@ -96,40 +121,26 @@ searchId.addEventListener("keyup", showSearch);
 searchId.addEventListener("keydown", function (e) { resetSearch(e); });
 // ======================== Add playlist ================================================================================================
 function add() {
-    var addNameId = document.getElementsByName("name")[0];
-    var addUrlId = document.getElementsByName("url")[0];
-    var addImgId = document.getElementsByName("img")[0];
-    var addCategoriesId = document.getElementsByName("categories")[0];
+    let addNameId = document.getElementsByName("name")[0];
+    let addUrlId = document.getElementsByName("url")[0];
+    let addImgId = document.getElementsByName("img")[0];
+    let addCategoriesId = document.getElementsByName("categories")[0];
     // Fetching values from input form
-    var name = addNameId.value;
-    var url = addUrlId.value;
-    var img = addImgId.value;
-    var categories = addCategoriesId.value.split(",");
+    let name = addNameId.value;
+    let url = addUrlId.value;
+    let img = addImgId.value;
+    let categories = addCategoriesId.value.split(",");
     // Creating the DOM nodes
-    var newTile = document.createElement("div");
-    newTile.classList.add("playlist-tile");
-    var newName = document.createElement("p");
-    newName.appendChild(document.createTextNode(name));
-    var newUrl = document.createElement("a");
-    newUrl.setAttribute("href", url);
-    var newImg = document.createElement("img");
-    newImg.setAttribute("src", "content/img/" + img);
-    var editButton = document.createElement("button");
-    editButton.appendChild(document.createTextNode("Edit"));
-    editButton.classList.add("edit-button");
-    editButton.addEventListener("click", function (e) { showEditModule(e); });
-    var deleteButton = document.createElement("button");
-    deleteButton.appendChild(document.createTextNode("Delete"));
-    deleteButton.classList.add("delete-button");
-    var newDiv = document.createElement("div");
-    // Appending the children
-    newDiv.appendChild(editButton);
-    newDiv.appendChild(deleteButton);
-    newTile.appendChild(newUrl);
-    newTile.appendChild(newImg);
-    newTile.appendChild(newName);
-    newTile.appendChild(newDiv);
+    let newTile = createTile(name, url, img);
     playlistId.appendChild(newTile);
+    // Create object and pop into library
+    let newPlaylist = {
+        name: name,
+        img: img,
+        url: url,
+        categories: categories,
+    };
+    lib.push(newPlaylist);
     // Return to home page
     searchId.value = "";
     showSearch();
@@ -139,34 +150,60 @@ function add() {
     addImgId.value = "";
     addCategoriesId.value = "";
 }
+function createTile(name, url, img) {
+    let newTile = document.createElement("div");
+    newTile.classList.add("playlist-tile");
+    let newName = document.createElement("p");
+    newName.appendChild(document.createTextNode(name));
+    let newUrl = document.createElement("a");
+    newUrl.setAttribute("href", url);
+    let newImg = document.createElement("img");
+    newImg.setAttribute("src", "content/img/" + img);
+    let editButton = document.createElement("button");
+    editButton.appendChild(document.createTextNode("Edit"));
+    editButton.classList.add("edit-button");
+    editButton.addEventListener("click", function (e) { showEditModule(e); });
+    let deleteButton = document.createElement("button");
+    deleteButton.appendChild(document.createTextNode("Delete"));
+    deleteButton.classList.add("delete-button");
+    let newDiv = document.createElement("div");
+    // Appending the children
+    newDiv.appendChild(editButton);
+    newDiv.appendChild(deleteButton);
+    newTile.appendChild(newUrl);
+    newTile.appendChild(newImg);
+    newTile.appendChild(newName);
+    newTile.appendChild(newDiv);
+    return newTile;
+}
 // Adding the event listeners
-var addSumbitId = document.getElementById("add-submit");
+let addSumbitId = document.getElementById("add-submit");
 addSumbitId.addEventListener("click", add);
 // ======================== Edit playlists ================================================================================================
-var editSave = document.getElementById("edit-submit");
-var editCancel = document.getElementById("edit-cancel");
-var editDisplayImg = document.getElementById("edit-img");
-var editedName = document.getElementsByName("edited-name")[0];
-var editedUrl = document.getElementsByName("edited-url")[0];
-var editedImg = document.getElementsByName("edited-img")[0];
-var editCategories = document.getElementsByName("edited-categories")[0];
-var editedIds = [editedName, editedUrl, editedImg, editCategories];
+let editSave = document.getElementById("edit-submit");
+let editCancel = document.getElementById("edit-cancel");
+let editDisplayImg = document.getElementById("edit-img");
+let editedName = document.getElementsByName("edited-name")[0];
+let editedUrl = document.getElementsByName("edited-url")[0];
+let editedImg = document.getElementsByName("edited-img")[0];
+let editCategories = document.getElementsByName("edited-categories")[0];
+let editedIds = [editedName, editedUrl, editedImg, editCategories];
 // Adjusts the class (mostly CSS appearance) when editing mode is on
 function editOn() {
-    var tiles = document.querySelectorAll(".playlist-tile");
-    tiles.forEach(function (tile) { return tile.classList.add("editing"); });
+    let tiles = document.querySelectorAll(".playlist-tile");
+    tiles.forEach(tile => tile.classList.add("editing"));
 }
 // Return class to normal
 function editOff() {
-    var tiles = document.querySelectorAll(".playlist-tile");
-    tiles.forEach(function (tile) { return tile.classList.remove("editing"); });
+    let tiles = document.querySelectorAll(".playlist-tile");
+    tiles.forEach(tile => tile.classList.remove("editing"));
 }
 // Shows edit module
 function showEditModule(e) {
     show(editId);
     show(backgroundDim);
-    var target = e.target;
-    var playlistInfo = target.parentNode.parentNode;
+    let target = e.target;
+    let playlistInfo = target.parentNode.parentNode;
     editedName.value = playlistInfo.getElementsByTagName("p")[0].textContent;
     editedUrl.value = playlistInfo.getElementsByTagName("a")[0].getAttribute("href");
     editedImg.value = playlistInfo.getElementsByTagName("img")[0].getAttribute("src");
@@ -179,11 +216,22 @@ function hideEditModuleSubmit(e) {
 function hideEditModuleCancel() {
     hide(editId);
     hide(backgroundDim);
-    editedIds.forEach(function (element) { return element.value = ""; });
+    editedIds.forEach(element => element.value = "");
 }
 editSave.addEventListener("click", function (e) { hideEditModuleSubmit(e); });
 editCancel.addEventListener("click", hideEditModuleCancel);
 backgroundDim.addEventListener("click", hideEditModuleCancel);
+// ======================== Upon leaving ========================================================================================================================
+function storeStuff() {
+    // parse libs and categories into json
+    if (lib.length != 0) {
+        window.localStorage.setItem("lib", JSON.stringify(lib));
+    }
+    if (categories.length != 0) {
+        window.localStorage.setItem("categories", JSON.stringify(categories));
+    }
+}
+window.onbeforeunload = storeStuff;
 // ======================== Final bits ================================================================================================
 if (!playlistId.hasChildNodes) {
     show(introId);
@@ -191,9 +239,9 @@ if (!playlistId.hasChildNodes) {
 else {
     hide(introId);
 }
-var abc = document.querySelectorAll(".edit-button");
-abc.forEach(function (element) {
+let abc = document.querySelectorAll(".edit-button");
+abc.forEach(element => {
     element.addEventListener("click", function (e) { showEditModule(e); });
 });
-var welcomeText = "Anything you wanna listen to?";
+let welcomeText = "Anything you wanna listen to?";
 document.getElementById("search").setAttribute("placeholder", welcomeText);
