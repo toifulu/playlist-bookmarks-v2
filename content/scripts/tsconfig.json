@@ -2,6 +2,9 @@
     "compilerOptions": {
         "target": "ESNext", // makes it compile into js latest version
         "watch": true, // makes ts compile the code every time it's saved (use "% tsc -w" to activate)
-        "lib": ["DOM", "ES2017"] // specifies which libraries to include
+        "lib": [
+            "DOM",
+            "ES2017"
+        ] // specifies which libraries to include
     }
 }
