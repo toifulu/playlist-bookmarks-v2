@@ -1,50 +1,3 @@
-interface Playlist {
-    name: string,
-    img: string,
-    url: string,
-    categories: Array<string>
-}
-
-let lib: Array<Playlist> = [];
-let categories: Array<string> = [];
-
-// ======================== Upon loading ================================================================================================
-
-// init localstorage
-if (window.localStorage.length == 0) {
-    localStorage.setItem("lib", "");
-    localStorage.setItem("categories", "");
-}
-
-function loadPage(): void {
-    // load up everything
-    if (localStorage.getItem("lib") !== "") {
-        try {
-            lib = JSON.parse(localStorage.getItem("lib"));
-        } catch (err) {
-            console.log(err);
-        }
-
-        lib.forEach((tile) => {
-            let newTile = createTile(tile.name, tile.url, tile.img);
-            playlistId.appendChild(newTile);
-        });
-
-    }
-    if (localStorage.getItem("categories") !== "") {
-        try {
-            categories = JSON.parse(localStorage.getItem("categories"));
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-}
-
-document.addEventListener("DOMContentLoaded", loadPage);
-
-// ======================== Show and hide ========================================================================================================================
-
 // DOM references
 let searchId = <HTMLInputElement>document.getElementById("search");
 let introId = document.getElementById("intro");
@@ -55,6 +8,72 @@ let editId = document.getElementById("edit-playlist");
 let helpId = document.getElementById("help");
 let backgroundDim = document.getElementById("background-dim");
 
+interface Playlist {
+    name: string,
+    img: string,
+    url: string,
+    categories: Array<string>
+}
+
+interface Category {
+    name: string,
+    count: number
+}
+
+/**
+ * need to do:
+ * add delete function
+ * input validation for add function (no same name)
+ * categories
+ * make the search function work
+ * edit playlists
+ * drag n drop reoorganise
+ */
+
+
+let lib: Array<Playlist> = [];
+let uniqueCategories: Array<string> = [];
+let categoriesLib: Array<Category> = [];
+
+
+// ======================== Upon loading ======================================================== //
+
+// Init localStorage
+if (localStorage.getItem("lib") === "null") {
+    localStorage.setItem("lib", "[]");
+}
+if (localStorage.getItem("categories") === "null") { // kms everything's stored as strings i forgot
+    localStorage.setItem("categories", "[]");
+}
+
+// Take data from localStorage and load it into the page
+function loadPage(): void {
+    try {
+        lib = JSON.parse(localStorage.getItem("lib"));
+    } catch (err) {
+        console.log(err);
+    }
+
+    lib.forEach((tile) => {
+        let newTile = createTile(tile.name, tile.url, tile.img);
+        playlistId.appendChild(newTile);
+    });
+    
+    try {
+        categoriesLib = JSON.parse(localStorage.getItem("categories"));
+    } catch (err) {
+        console.log(err);
+    }
+
+    console.table(lib);
+    console.table(categoriesLib);
+}
+
+document.addEventListener("DOMContentLoaded", loadPage);
+
+// ======================== Show and hide ======================================================== //
+
+// Functions to make life easier
 function show(id: HTMLElement): void { id.removeAttribute("style"); }
 function hide(id: HTMLElement): void { id.setAttribute("style", "display: none;"); }
 
@@ -75,7 +94,6 @@ function showSearch(): void {
         case "+":
             show(addId);
             searchId.value = "Add playlist";
-            console.log("UH");
             break;
         case "add playlist":
             show(addId);
@@ -142,8 +160,9 @@ function resetSearch(e: KeyboardEvent): void {
 searchId.addEventListener("keyup", showSearch);
 searchId.addEventListener("keydown", function (e) { resetSearch(e) });
 
-// ======================== Add playlist ================================================================================================
+// ======================== Add playlist ======================================================== //
 
+// Adds the playlist and append data into libs/categories
 function add(): void {
 
     let addNameId = <HTMLInputElement>document.getElementsByName("name")[0];
@@ -170,6 +189,24 @@ function add(): void {
     };
 
     lib.push(newPlaylist);
+    
+    // Add unique categories into categories
+    categories.forEach((category) => {
+        if (uniqueCategories.indexOf(category) === -1) {
+            uniqueCategories.push(category);
+            let newCategory: Category = {
+                name: category,
+                count: 1
+            }
+            categoriesLib.push(newCategory);
+        } else {
+            categoriesLib.forEach((cateLib) => {
+                if (cateLib.name === category) {
+                    cateLib.count++;
+                }
+            });
+        }
+    });
 
     // Return to home page
     (<HTMLInputElement>searchId).value = "";
@@ -182,6 +219,7 @@ function add(): void {
     addCategoriesId.value = "";
 }
 
+// Returns a HTML playlist tile
 function createTile(name: string, url: string, img: string): HTMLElement {
     let newTile = document.createElement("div");
     newTile.classList.add("playlist-tile");
@@ -199,6 +237,7 @@ function createTile(name: string, url: string, img: string): HTMLElement {
     let deleteButton = document.createElement("button");
     deleteButton.appendChild(document.createTextNode("Delete"));
     deleteButton.classList.add("delete-button");
+    deleteButton.addEventListener("click", function (e) { deleteTile(e); });
     let newDiv = document.createElement("div");
 
     // Appending the children
@@ -217,8 +256,9 @@ function createTile(name: string, url: string, img: string): HTMLElement {
 let addSumbitId = document.getElementById("add-submit");
 addSumbitId.addEventListener("click", add);
 
-// ======================== Edit playlists ================================================================================================
+// ======================== Edit playlists ======================================================== //
 
+// DOM references
 let editSave = document.getElementById("edit-submit");
 let editCancel = document.getElementById("edit-cancel");
 let editDisplayImg = document.getElementById("edit-img");
@@ -236,7 +276,6 @@ function editOn(): void {
     tiles.forEach(tile => tile.classList.add("editing"));
 }
 
-// Return class to normal
 function editOff(): void {
     let tiles = document.querySelectorAll(".playlist-tile");
     tiles.forEach(tile => tile.classList.remove("editing"));
@@ -256,15 +295,17 @@ function showEditModule(e: Event): void {
     editDisplayImg.setAttribute("src", editedImg.value);
 }
 
+// Hides the edit module when user presses "submit"
+// todo add edited data
 function hideEditModuleSubmit(e: Event): void {
     hide(editId);
     hide(backgroundDim);
 }
 
+// Hides the edit module when user presses "cancel"
 function hideEditModuleCancel(): void {
     hide(editId);
     hide(backgroundDim);
-
     editedIds.forEach(element => element.value = "");
 }
 
@@ -272,32 +313,65 @@ editSave.addEventListener("click", function (e) { hideEditModuleSubmit(e); });
 editCancel.addEventListener("click", hideEditModuleCancel);
 backgroundDim.addEventListener("click", hideEditModuleCancel);
 
-// ======================== Upon leaving ========================================================================================================================
+// ======================== Delete playlists ======================================================== //
+
+
+function deleteTile(e: Event): void {
+    let target = <HTMLElement>e.target;
+    let tile: any = target.parentNode.parentElement;
+    let tileName: any = tile.getElementsByTagName("p")[0].textContent;
+
+    tile.remove(); 
+
+    // Update libs & categoriesLib
+    lib.forEach((playlist, index) => {
+        if (playlist.name === tileName) {
+
+            // Update categories
+            playlist.categories.forEach((category) => {
+                categoriesLib.forEach((cateLib, index) => {
+                    if (cateLib.name === category) {
+                        cateLib.count--;
+                    }
+                    if (cateLib.count <= 0) {
+                        let uIndex = uniqueCategories.indexOf(cateLib.name);
+                        uniqueCategories.splice(uIndex, 1);
+                        categoriesLib.splice(index, 1);
+                    }
+                });
+            });
+
+            // Remove from libs
+            lib.splice(index, 1);
+        }
+    });
+    console.table(lib);
+    console.table(categoriesLib);
+}
+
+// ======================== Upon leaving ======================================================== //
 
 function storeStuff() {
     // parse libs and categories into json
-    if (lib.length != 0) {
-        window.localStorage.setItem("lib", JSON.stringify(lib));
-    }
-    if (categories.length != 0) {
-        window.localStorage.setItem("categories", JSON.stringify(categories));
-    }
+    window.localStorage.setItem("lib", JSON.stringify(lib));
+    window.localStorage.setItem("categories", JSON.stringify(categoriesLib));
 }
 
 window.onbeforeunload = storeStuff;
 
-// ======================== Final bits ================================================================================================
+// ======================== Final bits ======================================================== //
 
-if (!playlistId.hasChildNodes) {
+if (lib.length === 0) {
     show(introId);
 } else {
     hide(introId);
 }
 
-let abc = document.querySelectorAll(".edit-button");
-abc.forEach(element => {
-    element.addEventListener("click", function (e) { showEditModule(e); });
-});
+function reset(): void {
+    lib = [];
+    categoriesLib = [];
+    localStorage.clear();
+}
 
 let welcomeText = "Anything you wanna listen to?";
 document.getElementById("search").setAttribute("placeholder", welcomeText);
