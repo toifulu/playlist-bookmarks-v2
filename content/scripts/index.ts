@@ -26,8 +26,7 @@ interface Category {
  * input validation for add function (no same name)
  * categories
  * make the search function work
- * edit playlists
- * drag n drop reoorganise
+ * drag n drop to reoorganise
  */
 
 
@@ -67,6 +66,12 @@ function loadPage(): void {
 
     console.table(lib);
     console.table(categoriesLib);
+
+    if (lib.length === 0) {
+        show(introId);
+    } else {
+        hide(introId);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", loadPage);
@@ -237,7 +242,7 @@ function createTile(name: string, url: string, img: string): HTMLElement {
     let deleteButton = document.createElement("button");
     deleteButton.appendChild(document.createTextNode("Delete"));
     deleteButton.classList.add("delete-button");
-    deleteButton.addEventListener("click", function (e) { deleteTile(e); });
+    deleteButton.addEventListener("click", function (e) { showDeleteModule(e); });
     let newDiv = document.createElement("div");
 
     // Appending the children
@@ -266,9 +271,11 @@ let editDisplayImg = document.getElementById("edit-img");
 let editedName = <HTMLInputElement>document.getElementsByName("edited-name")[0];
 let editedUrl = <HTMLInputElement>document.getElementsByName("edited-url")[0];
 let editedImg = <HTMLInputElement>document.getElementsByName("edited-img")[0];
-let editCategories = <HTMLInputElement>document.getElementsByName("edited-categories")[0];
+let editedCategories = <HTMLInputElement>document.getElementsByName("edited-categories")[0];
 
-let editedIds = [editedName, editedUrl, editedImg, editCategories];
+let editedIds = [editedName, editedUrl, editedImg, editedCategories];
+let editedPlaylist: Playlist;
+let editedIndex: number;
 
 // Adjusts the class (mostly CSS appearance) when editing mode is on
 function editOn(): void {
@@ -287,17 +294,42 @@ function showEditModule(e: Event): void {
     show(backgroundDim);
 
     let target = <HTMLElement>e.target;
-    let playlistInfo: any = target.parentNode.parentNode;
+    let playlistName: any = target.parentNode.previousSibling.textContent;
 
-    editedName.value = playlistInfo.getElementsByTagName("p")[0].textContent;
-    editedUrl.value = playlistInfo.getElementsByTagName("a")[0].getAttribute("href");
-    editedImg.value = playlistInfo.getElementsByTagName("img")[0].getAttribute("src");
-    editDisplayImg.setAttribute("src", editedImg.value);
+    // Grab playlist data from libs
+    lib.forEach((playlist, index) => {
+        if (playlist.name === playlistName) {
+            editedIndex = index;
+            editedPlaylist = playlist;
+        }
+    });
+
+    editedName.value = editedPlaylist.name;
+    editedUrl.value = editedPlaylist.url;
+    editedImg.value = editedPlaylist.img;
+    editedCategories.value = JSON.stringify(editedPlaylist.categories);
+    editDisplayImg.setAttribute("src", `content/img/${editedImg.value}`);
+
+    console.log(editedIndex);
 }
 
 // Hides the edit module when user presses "submit"
-// todo add edited data
-function hideEditModuleSubmit(e: Event): void {
+function hideEditModuleSubmit(): void {
+
+    let targetTile = playlistId.childNodes[editedIndex];
+    let tileElements: any = targetTile.childNodes;
+
+    // Update libs data
+    lib[editedIndex].name = editedName.value;
+    lib[editedIndex].url = editedUrl.value;
+    lib[editedIndex].img = editedImg.value;
+    lib[editedIndex].categories = JSON.parse(editedCategories.value);
+
+    // Edit new values into html
+    tileElements[0].setAttribute("href", editedUrl.value);
+    tileElements[1].setAttribute("src", `content/img/${editedImg.value}`);
+    tileElements[2].textContent = editedName.value;
+
     hide(editId);
     hide(backgroundDim);
 }
@@ -309,23 +341,44 @@ function hideEditModuleCancel(): void {
     editedIds.forEach(element => element.value = "");
 }
 
-editSave.addEventListener("click", function (e) { hideEditModuleSubmit(e); });
+// todo add check if image exists before loading
+
+// Changes display img based on what is entered
+function showDisplayImg(): void {
+    let newSrc = `content/img/${editedImg.value}`;
+    editDisplayImg.setAttribute("src", newSrc);
+}
+
+editedImg.addEventListener("keyup", showDisplayImg);
+editSave.addEventListener("click", hideEditModuleSubmit);
 editCancel.addEventListener("click", hideEditModuleCancel);
 backgroundDim.addEventListener("click", hideEditModuleCancel);
 
 // ======================== Delete playlists ======================================================== //
 
+// todo make delete confirmation 
 
-function deleteTile(e: Event): void {
-    let target = <HTMLElement>e.target;
-    let tile: any = target.parentNode.parentElement;
-    let tileName: any = tile.getElementsByTagName("p")[0].textContent;
+let deleteTarget: HTMLElement;
+let deletetile: any;
+let deleteTileName: any;
 
-    tile.remove(); 
+function showDeleteModule(e: Event): void {
+    deleteTarget = <HTMLElement>e.target;
+    deletetile = deleteTarget.parentNode.parentElement;
+    deleteTileName = deletetile.getElementsByTagName("p")[0].textContent;
+
+    deleteTile(); // todo replace this with the delete confirmation trigger
+
+    console.table(lib);
+    console.table(categoriesLib);
+}
+
+function deleteTile() {
+    deletetile.remove();
 
     // Update libs & categoriesLib
     lib.forEach((playlist, index) => {
-        if (playlist.name === tileName) {
+        if (playlist.name === deleteTileName) {
 
             // Update categories
             playlist.categories.forEach((category) => {
@@ -345,9 +398,9 @@ function deleteTile(e: Event): void {
             lib.splice(index, 1);
         }
     });
-    console.table(lib);
-    console.table(categoriesLib);
 }
+
+// todo add event listener to deletetile confirm
 
 // ======================== Upon leaving ======================================================== //
 
@@ -360,12 +413,6 @@ function storeStuff() {
 window.onbeforeunload = storeStuff;
 
 // ======================== Final bits ======================================================== //
-
-if (lib.length === 0) {
-    show(introId);
-} else {
-    hide(introId);
-}
 
 function reset(): void {
     lib = [];

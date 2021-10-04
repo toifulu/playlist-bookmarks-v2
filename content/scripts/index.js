@@ -13,8 +13,7 @@ let backgroundDim = document.getElementById("background-dim");
  * input validation for add function (no same name)
  * categories
  * make the search function work
- * edit playlists
- * drag n drop reoorganise
+ * drag n drop to reoorganise
  */
 let lib = [];
 let uniqueCategories = [];
@@ -47,6 +46,12 @@ function loadPage() {
     }
     console.table(lib);
     console.table(categoriesLib);
+    if (lib.length === 0) {
+        show(introId);
+    }
+    else {
+        hide(introId);
+    }
 }
 document.addEventListener("DOMContentLoaded", loadPage);
 // ======================== Show and hide ======================================================== //
@@ -196,7 +201,7 @@ function createTile(name, url, img) {
     let deleteButton = document.createElement("button");
     deleteButton.appendChild(document.createTextNode("Delete"));
     deleteButton.classList.add("delete-button");
-    deleteButton.addEventListener("click", function (e) { deleteTile(e); });
+    deleteButton.addEventListener("click", function (e) { showDeleteModule(e); });
     let newDiv = document.createElement("div");
     // Appending the children
     newDiv.appendChild(editButton);
@@ -218,8 +223,10 @@ let editDisplayImg = document.getElementById("edit-img");
 let editedName = document.getElementsByName("edited-name")[0];
 let editedUrl = document.getElementsByName("edited-url")[0];
 let editedImg = document.getElementsByName("edited-img")[0];
-let editCategories = document.getElementsByName("edited-categories")[0];
-let editedIds = [editedName, editedUrl, editedImg, editCategories];
+let editedCategories = document.getElementsByName("edited-categories")[0];
+let editedIds = [editedName, editedUrl, editedImg, editedCategories];
+let editedPlaylist;
+let editedIndex;
 // Adjusts the class (mostly CSS appearance) when editing mode is on
 function editOn() {
     let tiles = document.querySelectorAll(".playlist-tile");
@@ -234,15 +241,34 @@ function showEditModule(e) {
     show(editId);
     show(backgroundDim);
     let target = e.target;
-    let playlistInfo = target.parentNode.parentNode;
-    editedName.value = playlistInfo.getElementsByTagName("p")[0].textContent;
-    editedUrl.value = playlistInfo.getElementsByTagName("a")[0].getAttribute("href");
-    editedImg.value = playlistInfo.getElementsByTagName("img")[0].getAttribute("src");
-    editDisplayImg.setAttribute("src", editedImg.value);
+    let playlistName = target.parentNode.previousSibling.textContent;
+    // Grab playlist data from libs
+    lib.forEach((playlist, index) => {
+        if (playlist.name === playlistName) {
+            editedIndex = index;
+            editedPlaylist = playlist;
+        }
+    });
+    editedName.value = editedPlaylist.name;
+    editedUrl.value = editedPlaylist.url;
+    editedImg.value = editedPlaylist.img;
+    editedCategories.value = JSON.stringify(editedPlaylist.categories);
+    editDisplayImg.setAttribute("src", `content/img/${editedImg.value}`);
+    console.log(editedIndex);
 }
 // Hides the edit module when user presses "submit"
-// todo add edited data
-function hideEditModuleSubmit(e) {
+function hideEditModuleSubmit() {
+    let targetTile = playlistId.childNodes[editedIndex];
+    let tileElements = targetTile.childNodes;
+    // Update libs data
+    lib[editedIndex].name = editedName.value;
+    lib[editedIndex].url = editedUrl.value;
+    lib[editedIndex].img = editedImg.value;
+    lib[editedIndex].categories = JSON.parse(editedCategories.value);
+    // Edit new values into html
+    tileElements[0].setAttribute("href", editedUrl.value);
+    tileElements[1].setAttribute("src", `content/img/${editedImg.value}`);
+    tileElements[2].textContent = editedName.value;
     hide(editId);
     hide(backgroundDim);
 }
@@ -252,18 +278,34 @@ function hideEditModuleCancel() {
     hide(backgroundDim);
     editedIds.forEach(element => element.value = "");
 }
-editSave.addEventListener("click", function (e) { hideEditModuleSubmit(e); });
+// todo add check if image exists before loading
+// Changes display img based on what is entered
+function showDisplayImg() {
+    let newSrc = `content/img/${editedImg.value}`;
+    editDisplayImg.setAttribute("src", newSrc);
+}
+editedImg.addEventListener("keyup", showDisplayImg);
+editSave.addEventListener("click", hideEditModuleSubmit);
 editCancel.addEventListener("click", hideEditModuleCancel);
 backgroundDim.addEventListener("click", hideEditModuleCancel);
 // ======================== Delete playlists ======================================================== //
-function deleteTile(e) {
-    let target = e.target;
-    let tile = target.parentNode.parentElement;
-    let tileName = tile.getElementsByTagName("p")[0].textContent;
-    tile.remove();
+// todo make delete confirmation 
+let deleteTarget;
+let deletetile;
+let deleteTileName;
+function showDeleteModule(e) {
+    deleteTarget = e.target;
+    deletetile = deleteTarget.parentNode.parentElement;
+    deleteTileName = deletetile.getElementsByTagName("p")[0].textContent;
+    deleteTile(); // todo replace this with the delete confirmation trigger
+    console.table(lib);
+    console.table(categoriesLib);
+}
+function deleteTile() {
+    deletetile.remove();
     // Update libs & categoriesLib
     lib.forEach((playlist, index) => {
-        if (playlist.name === tileName) {
+        if (playlist.name === deleteTileName) {
             // Update categories
             playlist.categories.forEach((category) => {
                 categoriesLib.forEach((cateLib, index) => {
@@ -281,9 +323,8 @@ function deleteTile(e) {
             lib.splice(index, 1);
         }
     });
-    console.table(lib);
-    console.table(categoriesLib);
 }
+// todo add event listener to deletetile confirm
 // ======================== Upon leaving ======================================================== //
 function storeStuff() {
     // parse libs and categories into json
@@ -292,12 +333,6 @@ function storeStuff() {
 }
 window.onbeforeunload = storeStuff;
 // ======================== Final bits ======================================================== //
-if (lib.length === 0) {
-    show(introId);
-}
-else {
-    hide(introId);
-}
 function reset() {
     lib = [];
     categoriesLib = [];
