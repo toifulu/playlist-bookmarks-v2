@@ -21,8 +21,8 @@ interface Category {
 }
 
 /** TODO:
- * input validation for add function (no same name)
  * add delete confirmation (are you sure? delete cancel)
+ * add settings toggle (console-mini, delete log)
  * make categories work (edit as well)
  * drag n drop to reoorganise
  */
@@ -193,6 +193,19 @@ function add(): void {
     let img = addImgId.value;
     let categories = addCategoriesId.value.split(",");
 
+    // Checking name is unique
+    let legal = true;
+
+    lib.forEach((playlist) => {
+        if (playlist.name === name) {
+            let nameWarningId = document.getElementById("name-warning");
+            nameWarningId.textContent = `A playlist name with name "${name}" already exists`;
+            legal = false;
+        }
+    })
+
+    if (!legal) { return; }
+
     // Creating the DOM nodes
     let newTile = createTile(name, url, img);
     playlistId.appendChild(newTile);
@@ -234,6 +247,9 @@ function add(): void {
     addUrlId.value = "";
     addImgId.value = "";
     addCategoriesId.value = "";
+
+    let warnings: any = document.querySelectorAll("#add-warning > p");
+    warnings.forEach((warning) => hide(warning));
 }
 
 // Returns a HTML playlist tile
@@ -423,6 +439,33 @@ function storeStuff() {
 }
 
 window.onbeforeunload = storeStuff;
+
+// ======================== Console mini ======================================================== //
+
+let consoleMini = document.getElementById("console-mini");
+
+function miniLog(text: string) {
+    consoleMini.textContent = text;
+}
+
+let date = new Date();
+let hours = date.getHours();
+type Times = "morning :)" | "afternoon :)" | "evening :)" | "..morning?";
+let greetingMsg: Times;
+
+if (3 <= hours && hours <= 12) {
+    greetingMsg = "morning :)";
+} else if (12 < hours && hours <= 18) {
+    greetingMsg = "afternoon :)";
+} else if (18 < hours && hours <= 23) {
+    greetingMsg = "evening :)";
+} else {
+    greetingMsg = "..morning?";
+}
+
+miniLog(`Page successfully loaded!`);
+
+setTimeout(() => miniLog(`Good ${greetingMsg}`), 1000);
 
 // ======================== Final bits ======================================================== //
 

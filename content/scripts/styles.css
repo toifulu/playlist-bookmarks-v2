@@ -35,6 +35,15 @@ h1 {
     background-color: rgba(0, 0, 0, 0.3);
 }
 
+/* ================ Console-mini ================================================================================================ */
+
+#console-mini {
+    position: absolute;
+    left: 20px;
+    top: 0px;
+    color:rgb(87, 86, 86);
+}
+
 /* ================ Search bar ================================================================================================ */
 
 #search {
@@ -149,13 +158,13 @@ h1 {
 
 .editing {
     background-color: rgb(48, 48, 49);
-    border: 1px solid rgb(65, 72, 78);
+    border: 1px dotted rgb(116, 120, 124);
 }
 
 .editing:hover {
     background-color: rgb(38, 38, 39);
     padding: 11px;
-    border: 2px solid rgb(65, 72, 78);
+    border: 2px solid rgb(114, 116, 117);
 }
 
 .editing:hover > div { visibility: visible; }
@@ -361,11 +370,21 @@ h1 {
 }
 
 #add-submit:active {
-        background-color: rgb(63, 122, 177);
-        font-weight: bold;
+    background-color: rgb(63, 122, 177);
+    font-weight: bold;
 }
 
-/* ================ Search categories ================ */
+#add-warning {
+    flex-direction: column;
+}
+
+#add-warning > p {
+    text-align: center;
+    color: rgb(243, 144, 127);
+    margin: 0px;
+}
+
+/* ================ Search categories ================================================================================================ */
 
 #categories {
     margin: -5px 10px 0px 10px;
