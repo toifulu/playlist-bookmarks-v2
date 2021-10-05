@@ -20,12 +20,10 @@ interface Category {
     count: number
 }
 
-/**
- * need to do:
- * add delete function
+/** TODO:
  * input validation for add function (no same name)
- * categories
- * make the search function work
+ * add delete confirmation (are you sure? delete cancel)
+ * make categories work (edit as well)
  * drag n drop to reoorganise
  */
 
@@ -104,7 +102,6 @@ function showSearch(): void {
             show(addId);
             searchId.value = "Add playlist";
             break;
-
         case ">":
             show(categoryId);
             searchId.value = "Categories";
@@ -132,9 +129,24 @@ function showSearch(): void {
             searchId.value = "Commands list";
             break;
         default:
+            search(searchTxt);
             show(playlistId);
             editOff();
             break;
+    }
+}
+
+function search(searchTxt: string): void {
+    let playlists: any = document.querySelectorAll("#playlists > div");
+    lib.forEach((playlist, index) => {
+        
+        if (!playlist.name.includes(searchTxt)) {
+            hide(playlists[index]);
+            
+        }
+    });
+    if (searchTxt.length === 0) {
+        playlists.forEach(element => { show(element); });
     }
 }
 

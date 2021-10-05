@@ -7,12 +7,10 @@ let addId = document.getElementById("add-playlist");
 let editId = document.getElementById("edit-playlist");
 let helpId = document.getElementById("help");
 let backgroundDim = document.getElementById("background-dim");
-/**
- * need to do:
- * add delete function
+/** TODO:
  * input validation for add function (no same name)
- * categories
- * make the search function work
+ * add delete confirmation (are you sure? delete cancel)
+ * make categories work (edit as well)
  * drag n drop to reoorganise
  */
 let lib = [];
@@ -105,9 +103,21 @@ function showSearch() {
             searchId.value = "Commands list";
             break;
         default:
+            search(searchTxt);
             show(playlistId);
             editOff();
             break;
+    }
+}
+function search(searchTxt) {
+    let playlists = document.querySelectorAll("#playlists > div");
+    lib.forEach((playlist, index) => {
+        if (!playlist.name.includes(searchTxt)) {
+            hide(playlists[index]);
+        }
+    });
+    if (searchTxt.length === 0) {
+        playlists.forEach(element => { show(element); });
     }
 }
 // Deletes search query upon backspace
