@@ -13,8 +13,6 @@
 </head>
 <body>
 
-    <p id="console-mini">-</p>
-
     <input id="search" type="text" placeholder="Scripts are off">
 
     <div id="intro" style="display: none;">
@@ -37,7 +35,7 @@
             <p>Image</p>
             <input type="text" name="img">
             <p>Categories</p>
-            <input type="text" name="categories">
+            <input class="category-select" type="text" name="categories">
         </form>
 
         <input id="add-submit" type="submit" value="Create">
@@ -54,7 +52,7 @@
                 <p>Image</p>
                 <input type="text" name="edited-img">
                 <p>Categories</p>
-                <input type="text" name="edited-categories">
+                <input class="category-select" type="text" name="edited-categories">
             </form>
             <img id="edit-img">
         </div>
@@ -68,6 +66,24 @@
     <div id="categories" style="display: none;">
         <p>No categories yet. Once you create some, they'll appear here!</p>
         <ul></ul>
+    </div>
+
+    <div id="category-tab">
+            <div id="category-selector">
+                <div>
+                    <p>Vocals</p><button>X</button>
+                </div>
+                <div>
+                    <p>Game OST</p><button>X</button>
+                </div>
+                <div>
+                    <p>Instrumental</p><button>X</button>
+                </div>
+            </div>
+            <div id="category-creator">
+                <p>Create: </p>
+                <p>Instrumental</p>
+            </div>
     </div>
     
     <div id="help" style="display: none;">

@@ -401,3 +401,90 @@ h1 {
     font-weight: bold;
     cursor: pointer;
 }
+
+/* ================ Category selector ================================================================================================ */
+
+#category-tab {
+    top: 5px;
+    left: 5px;
+
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+
+    padding: 7px;
+    border:rgb(70, 72, 80) solid 2px;
+    border-radius: 3px;
+    background-color: rgb(34, 34, 34);
+
+}
+
+#category-selector {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#category-selector > div {
+    display: flex;
+    flex-direction: row;
+    margin: 2px;
+}
+
+#category-selector > div > p {
+    height: 15px;
+    background-color: rgb(65, 66, 66);
+    color: rgb(196, 196, 196);
+
+    padding: 3px 7px 7px 7px;
+    margin: 2px 0px 2px 2px;
+    border-radius: 2px 0px 0px 2px;
+}
+
+#category-selector > div > button {
+    align-self: center;
+    text-align: center;
+    height: 25px;
+    width: 25px;
+
+    background-color: rgb(65, 66, 66);
+    color: rgb(196, 196, 196);
+
+    border-style: none;
+    border-left:rgb(100, 99, 99) solid 1.5px;
+    border-radius: 0px 2px 2px 0px;
+}
+
+#category-selector > div > button:hover {
+    background-color: rgb(151, 78, 84);
+    color: rgb(223, 223, 223);
+    border-style: none;
+    border-left:rgb(100, 99, 99) solid 1.5px;
+    cursor: pointer;
+}
+
+#category-creator {
+    margin: 10px 5px 5px 5px;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    height: 25px;
+}
+
+#category-creator > p {
+    align-self: center;
+    padding: 2px 7px 7px 7px;
+    margin: 2px 0px 2px 2px;
+    border-radius: 2px 0px 0px 2px;
+    height: 15px;
+}
+
+#category-creator > p:first-child {
+    
+    background-color: rgb(34, 34, 34);
+}
+
+#category-creator > p:last-child {
+    background-color: rgb(65, 66, 66);
+    color: rgb(196, 196, 196);
+}

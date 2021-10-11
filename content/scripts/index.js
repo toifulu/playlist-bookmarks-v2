@@ -8,9 +8,11 @@ let editId = document.getElementById("edit-playlist");
 let helpId = document.getElementById("help");
 let backgroundDim = document.getElementById("background-dim");
 /** TODO:
- * add delete confirmation (are you sure? delete cancel)
- * add settings toggle (console-mini, delete log)
  * make categories work (edit as well)
+ * add custom right click
+ * add delete confirmation (are you sure? delete cancel)
+ * add settings toggle
+ * add more input validation for add function (no blanks)
  * drag n drop to reoorganise
  */
 let lib = [];
@@ -109,10 +111,14 @@ function showSearch() {
             break;
     }
 }
+// Shows and hides playlist based on text in search bar
 function search(searchTxt) {
     let playlists = document.querySelectorAll("#playlists > div");
     lib.forEach((playlist, index) => {
-        if (!playlist.name.includes(searchTxt)) {
+        if (playlist.name.includes(searchTxt)) {
+            show(playlists[index]);
+        }
+        else {
             hide(playlists[index]);
         }
     });
@@ -278,7 +284,6 @@ function showEditModule(e) {
     editedImg.value = editedPlaylist.img;
     editedCategories.value = JSON.stringify(editedPlaylist.categories);
     editDisplayImg.setAttribute("src", `content/img/${editedImg.value}`);
-    console.log(editedIndex);
 }
 // Hides the edit module when user presses "submit"
 function hideEditModuleSubmit() {
@@ -349,6 +354,14 @@ function deleteTile() {
     });
 }
 // todo add event listener to deletetile confirm
+// ======================== Categories ======================================================== //
+let categorySelectIds = document.querySelectorAll(".category-select");
+/**
+ * categories always organised in alphabetical order
+ * click to create category
+ */
+function categorySelectHandler() {
+}
 // ======================== Upon leaving ======================================================== //
 function storeStuff() {
     // parse libs and categories into json
@@ -356,28 +369,24 @@ function storeStuff() {
     window.localStorage.setItem("categories", JSON.stringify(categoriesLib));
 }
 window.onbeforeunload = storeStuff;
-// ======================== Console mini ======================================================== //
-let consoleMini = document.getElementById("console-mini");
-function miniLog(text) {
-    consoleMini.textContent = text;
-}
+// ======================== Testing out time functions ======================================================== //
 let date = new Date();
 let hours = date.getHours();
 let greetingMsg;
 if (3 <= hours && hours <= 12) {
-    greetingMsg = "morning :)";
+    greetingMsg = "morning";
 }
 else if (12 < hours && hours <= 18) {
-    greetingMsg = "afternoon :)";
+    greetingMsg = "afternoon";
 }
 else if (18 < hours && hours <= 23) {
-    greetingMsg = "evening :)";
+    greetingMsg = "evening";
 }
 else {
     greetingMsg = "..morning?";
 }
-miniLog(`Page successfully loaded!`);
-setTimeout(() => miniLog(`Good ${greetingMsg}`), 1000);
+console.log(`Page successfully loaded`);
+console.log(`Good ${greetingMsg}`);
 // ======================== Final bits ======================================================== //
 function reset() {
     lib = [];
