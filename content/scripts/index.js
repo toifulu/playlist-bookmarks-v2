@@ -7,6 +7,7 @@ let addId = document.getElementById("add-playlist");
 let editId = document.getElementById("edit-playlist");
 let helpId = document.getElementById("help");
 let backgroundDim = document.getElementById("background-dim");
+// ! something wrong with the storage of uniqueCategories
 /** TODO:
  * make categories work (edit as well)
  * add custom right click
@@ -20,11 +21,14 @@ let uniqueCategories = [];
 let categoriesLib = [];
 // ======================== Upon loading ======================================================== //
 // Init localStorage
-if (localStorage.getItem("lib") === "null") {
+if (localStorage.getItem("lib") === null) {
     localStorage.setItem("lib", "[]");
 }
-if (localStorage.getItem("categories") === "null") { // kms everything's stored as strings i forgot
+if (localStorage.getItem("categories") === null) { // kms everything's stored as strings i forgot
     localStorage.setItem("categories", "[]");
+}
+if (localStorage.getItem("unique categories") === null) {
+    localStorage.setItem("unique categories", "[]");
 }
 // Take data from localStorage and load it into the page
 function loadPage() {
@@ -44,8 +48,16 @@ function loadPage() {
     catch (err) {
         console.log(err);
     }
-    console.table(lib);
-    console.table(categoriesLib);
+    try {
+        uniqueCategories = JSON.parse(localStorage.getItem("unique categories"));
+    }
+    catch (err) {
+        console.log(err);
+    }
+    // console.table(lib);
+    // console.table(categoriesLib);
+    console.log(uniqueCategories);
+    console.log(localStorage.getItem("unique categories"));
     if (lib.length === 0) {
         show(introId);
     }
@@ -77,6 +89,7 @@ function showSearch() {
         case "add playlist":
             show(addId);
             searchId.value = "Add playlist";
+            categoryAdd();
             break;
         case ">":
             show(categoryId);
@@ -356,17 +369,56 @@ function deleteTile() {
 // todo add event listener to deletetile confirm
 // ======================== Categories ======================================================== //
 let categorySelectIds = document.querySelectorAll(".category-select");
-/**
- * categories always organised in alphabetical order
- * click to create category
- */
-function categorySelectHandler() {
+let categoryTabId = document.getElementById("category-tab");
+let categoriesId = document.querySelectorAll("#category-selector > div");
+let categoryCreatorText = document.querySelectorAll("#category-creator > p")[1];
+function categoryFocus(e) {
+    let target = e.target;
+    let pos = target.getBoundingClientRect();
+    let top = pos.bottom + 5;
+    categoryTabId.setAttribute("style", `visibility: visible; top: ${top}px; left: ${pos.left}px`);
 }
+function categoryReset() {
+    categoriesId.forEach((item) => {
+        item.remove();
+    });
+    categoryCreatorText.textContent = "";
+}
+let categorySelectorId = document.getElementById("category-selector");
+// Toggle what the category looks like when user wants to add new playlist
+function categoryAdd() {
+    categoryReset();
+    if (uniqueCategories.length === 0) {
+        return;
+    }
+    uniqueCategories.forEach((item) => {
+        let newP = document.createElement("p");
+        let newtext = document.createTextNode(item);
+        newP.appendChild(newtext);
+        let newButton = document.createElement("button");
+        let newtext2 = document.createTextNode("X");
+        newButton.appendChild(newtext2);
+        let newDiv = document.createElement("div");
+        newDiv.appendChild(newP);
+        newDiv.appendChild(newButton);
+        categorySelectorId.appendChild(newDiv);
+        console.log(newDiv);
+    });
+}
+function categoryFocusout(e) {
+    let target = e.target;
+    categoryTabId.setAttribute("style", `visibility: hidden;`);
+}
+categorySelectIds.forEach(id => {
+    id.addEventListener("focus", (e) => { categoryFocus(e); });
+    id.addEventListener("focusout", (e) => { categoryFocusout(e); });
+});
 // ======================== Upon leaving ======================================================== //
 function storeStuff() {
     // parse libs and categories into json
     window.localStorage.setItem("lib", JSON.stringify(lib));
     window.localStorage.setItem("categories", JSON.stringify(categoriesLib));
+    window.localStorage.setItm("unique categories", JSON.stringify(uniqueCategories));
 }
 window.onbeforeunload = storeStuff;
 // ======================== Testing out time functions ======================================================== //

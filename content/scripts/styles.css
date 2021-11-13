@@ -8,7 +8,7 @@
 }
 
 html {
-    background-color: rgb(27, 28, 31);
+    background-color: rgb(32, 32, 32);
     padding-bottom: 70px;
 }
 
@@ -20,7 +20,7 @@ body {
 
 h1 {
     font-size: 16px;
-    color: rgb(222, 203, 183);
+    color: rgb(216, 216, 216);
     margin-bottom: -5px;
 }
 
@@ -32,7 +32,7 @@ h1 {
     width: 100vw;
 
     z-index: 1;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.45);
 }
 
 /* ================ Console-mini ================================================================================================ */
@@ -62,7 +62,7 @@ h1 {
     padding: 20px;
     border: none;
     border-radius: 10px;
-    margin: 35px 10px 35px 10px;
+    margin: 45px 10px 45px 10px;
 }
 
 #search:hover {
@@ -70,7 +70,7 @@ h1 {
 }
 
 #search:focus {
-    margin: 34px 9px 34px 9px;
+    margin: 44px 9px 44px 9px;
     border: 1px solid rgb(87, 86, 86);
     outline: none;
 
@@ -98,25 +98,26 @@ h1 {
     position: relative;
     padding-bottom: 15px;
 
-    margin: 7px;
-    padding: 12px;
-    border-radius: 2px 22px 2px 22px;
+    margin: 9px;
+    border-radius: 4px;
 
-    background-color: rgb(41, 41, 44);
-    border:1px solid rgb(57, 57, 59);
+    background-color: rgb(65, 64, 64);
     text-decoration: none;
 }
 
 .playlist-tile:hover {
-    background-color: rgb(57, 57, 59);
+    margin: 9px;
+    color:rgb(224, 224, 224);
+    background-color: rgb(85, 85, 85);
+    box-shadow: 5px 5px 30px rgb(12, 12, 12);  
 }
 
 .playlist-tile > p {
-    padding: 10px 7px 5px 7px;
-    margin: 10px 7px 5px 7px;
+    padding: 13px 7px 5px 7px;
+    margin: 2px;
 
     line-height: 0px;
-    color: rgb(209, 202, 206);
+    color: rgb(201, 203, 204);
     max-width: 135px;
 }
 
@@ -131,11 +132,11 @@ h1 {
 }
 
 .playlist-tile > img {   
+    border-radius: 3px 3px 0px 0px;
     background-color: rgb(87, 86, 86);
     background-repeat: no-repeat;
     background-size: cover;
 
-    border-radius: 2px 22px 2px 2px;
     width: 175px;
     height: 175px;
 }
@@ -157,14 +158,17 @@ h1 {
 }
 
 .editing {
-    background-color: rgb(48, 48, 49);
-    border: 1px dotted rgb(116, 120, 124);
+    margin: 7px 7px 10px 7px;
+    padding: 1px 1px 13px 1px;
+    border: 1px solid rgb(107, 108, 109);
+    background-color: rgb(35, 35, 35);
 }
 
 .editing:hover {
-    background-color: rgb(38, 38, 39);
-    padding: 11px;
-    border: 2px solid rgb(114, 116, 117);
+    background-color: rgb(34, 34, 34);
+    margin: 4px 4px 6px 4px;
+    padding: 3px 3px 15px 3px;
+    border: 2px solid rgb(129, 130, 131);
 }
 
 .editing:hover > div { visibility: visible; }
@@ -193,16 +197,16 @@ h1 {
 }
 
 #edit-playlist {
-    background-color: rgb(35, 35, 36);
+    background-color: rgb(34, 34, 34);
     width: 650px;
     height: 350px;
 
     position: fixed;
     padding: 20px;
-    z-index: 10;
-    border: 2px solid rgb(87, 88, 90);
+    z-index: 2;
+    border: 2px solid rgb(129, 130, 131);
     border-radius: 2px;
-    margin-top: 22vh;
+    margin-top: 20vh;
     
     display: flex;
     justify-content: center;
@@ -407,17 +411,18 @@ h1 {
 #category-tab {
     top: 5px;
     left: 5px;
+    z-index: 3;
 
+    visibility: hidden;
     position: fixed;
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 275px;
 
     padding: 7px;
     border:rgb(70, 72, 80) solid 2px;
     border-radius: 3px;
     background-color: rgb(34, 34, 34);
-
 }
 
 #category-selector {
